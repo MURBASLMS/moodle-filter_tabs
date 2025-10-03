@@ -26,7 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'filter_tabs';
-$plugin->version = 2025012200;
-$plugin->release = '4.0.2';
-$plugin->requires = 2016052300;
+$plugin->version = 2025100300;
+$plugin->release = '4.5.0';
+$plugin->requires = 2024100700; // Moodle 4.5.0
 $plugin->maturity = MATURITY_STABLE;
