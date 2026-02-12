@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Tabs filter upgrade code.
+ * Mobile.
  *
  * @package    filter_tabs
  * @copyright  2017 José Puente <jpuentefs@gmail.com>
@@ -29,10 +29,6 @@ $addons = [
         'handlers' => [
             'tab_filter' => [
                 'init' => 'mobile_init',
-                'styles' => [
-                    'url' => $CFG->wwwroot . '/filter/tabs/mobile/css/tabs.css',
-                    'version' => '1.0',
-                ],
             ],
         ],
     ],

@@ -17,7 +17,7 @@
 namespace filter_tabs\output;
 
 /**
- * Renderable tabs.
+ * Mobile.
  *
  * @package    filter_tabs
  * @copyright  2022 José Puente <jpuentefs@gmail.com>
@@ -33,7 +33,7 @@ class mobile {
         }
 
         return [
-            'javascript' => file_get_contents($CFG->dirroot . '/filter/tabs/mobile/js/init.min.js'),
+            'javascript' => file_get_contents($CFG->dirroot . '/filter/tabs/mobile/js/init.js'),
         ];
     }
 }

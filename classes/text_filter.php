@@ -112,9 +112,12 @@ class text_filter extends \core_filters\text_filter {
             $this->renderer = $PAGE->get_renderer('filter_tabs');
         }
 
-        $config = config::create(get_config('filter_tabs'));
         $tabs = tab::from_matches($matches);
+        if (defined('WS_SERVER') && WS_SERVER) {
+            return $this->renderer->render_for_mobile($tabs);
+        }
 
+        $config = config::create(get_config('filter_tabs'));
         return $this->renderer->render(new renderable($config->get_template(), $tabs));
     }
 }

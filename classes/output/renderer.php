@@ -16,6 +16,8 @@
 
 namespace filter_tabs\output;
 
+use filter_tabs\tab;
+
 /**
  * Renderer for filter tabs.
  *
@@ -41,6 +43,26 @@ class renderer extends \plugin_renderer_base {
     public function render_renderable(renderable $renderable) {
         self::increase_group_counter();
         return $this->render_from_template($renderable->get_template(), $renderable->export_for_template($this));
+    }
+
+    /**
+     * Renders for mobile.
+     *
+     * @param tab[] $tabs
+     * @return string
+     */
+    public function render_for_mobile(array $tabs) {
+        $context = [
+            'initialvalue' => 'filter-tab-' . $tabs[0]->get_key(),
+            'tabs' => array_values(array_map(function(tab $tab) {
+                return [
+                    'value' => 'filter-tab-' . $tab->get_key(),
+                    'title' => $tab->get_title(),
+                    'content' => $tab->get_content(),
+                ];
+            }, $tabs)),
+        ];
+        return $this->render_from_template('filter_tabs/mobile', $context);
     }
 
     /**

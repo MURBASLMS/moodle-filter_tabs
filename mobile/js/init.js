@@ -1,76 +1,28 @@
-/* jshint esversion: 6 */
+var result = {
+    name: 'AddonTabsFilterHandler',
+    filterName: 'tabs',
 
-const that = this;
-
-class AddonTabsFilterHandler {
-
-    constructor() {
-        this.name = 'AddonTabsFilterHandler';
-        this.filterName = 'tabs';
-        this.timeoutId = 0;
-    }
-
-    isEnabled() {
+    isEnabled: function() {
         return true;
-    }
+    },
 
-    shouldBeApplied(options, site) {
-        // Only apply the filter if logged in and we're filtering current site.
-        return !!(site && site.getId() === that.CoreSitesProvider.getCurrentSiteId());
-    }
+    shouldBeApplied: function(options, site) {
+        return true;
+    },
 
-    filter(text, filter, options, siteId) {
+    filter: function(text) {
         return text;
-    }
+    },
 
-    handleHtml(container, filter, options, viewContainerRef, component, componentId, siteId) {
-        if (container.innerHTML.indexOf("filter-tabs-bootstrap") !== -1) {
-            // In case of multiple tab groups cancel current timeout, last timeout processes all tab groups.
-            clearTimeout(this.timeoutId);
-            this.timeoutId = setTimeout(() => {
-                this.processTabs();
-            }, 500);
+    handleHtml: function(container) {
+        // Stop ionChange from our accordions reaching any parent accordion group.
+        var wrappers = container.querySelectorAll('.filter-tabs-wrapper');
+        for (var i = 0; i < wrappers.length; i++) {
+            wrappers[i].addEventListener('ionChange', function(event) {
+                event.stopPropagation();
+            });
         }
     }
+};
 
-    processTabs() {
-        let tabGroupsElems = document.querySelectorAll("[id^='filter-tabs-tabgroup-']");
-        let tabGroups = [];
-
-        for (let tgeIdx = 0; tgeIdx < tabGroupsElems.length; tgeIdx++) {
-
-            let tabGroup = {
-                'tabs': tabGroupsElems[tgeIdx].querySelectorAll(".nav-tabs>li>a.filter-tabs"),
-                'panes': tabGroupsElems[tgeIdx].querySelectorAll(".tab-content>div.filter-tabs"),
-                'printable': tabGroupsElems[tgeIdx].querySelectorAll("[id$='-printable']")
-            };
-
-            for (let tgIdx = 0; tgIdx < tabGroup.tabs.length; tgIdx++) {
-                tabGroup.tabs[tgIdx].removeAttribute("href");
-                tabGroup.tabs[tgIdx].classList.remove('filter-tabs');
-                tabGroup.panes[tgIdx].classList.remove("filter-tabs");
-                tabGroup.printable[tgIdx].remove();
-            }
-            tabGroups[tgeIdx] = tabGroup;
-        }
-
-        for (let gidx = 0; gidx < tabGroups.length; gidx++) {
-            for (let tidx = 0; tidx < tabGroups[gidx].tabs.length; tidx++) {
-                tabGroups[gidx].tabs[tidx].setAttribute('data-gid', gidx);
-                tabGroups[gidx].tabs[tidx].addEventListener("click", function() {
-                    let tbGrpIdx = event.target.getAttribute('data-gid');
-                    tabGroups[tbGrpIdx].tabs.forEach(tab => tab.classList.remove("active"));
-                    tabGroups[tbGrpIdx].panes.forEach(pane => pane.classList.remove("show", "active"));
-
-                    let tab = event.target.classList;
-                    let pane = document.getElementById((event.target.getAttribute("aria-controls"))).classList;
-
-                    tab.add("active");
-                    pane.add("show", "active");
-                });
-            }
-        }
-    }
-}
-
-this.CoreFilterDelegate.registerHandler(new AddonTabsFilterHandler());
+this.CoreFilterDelegate.registerHandler(result);
